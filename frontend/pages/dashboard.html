@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+    <link as="style" href="https://fonts.googleapis.com/css2?display=swap&family=Inter%3Awght%40400%3B500%3B700%3B900&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+    <title>Experian Kiosk - Challenge Hub</title>
+    <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style type="text/tailwindcss">
+        :root {
+            --experian-blue: #007dc3;
+            --experian-dark-blue: #002e5d;
+            --experian-grey: #f0f2f5;
+        }
+        body {
+            font-family: 'Inter', 'Noto Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-[var(--experian-grey)]">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <svg class="h-8 w-8 text-[var(--experian-blue)]" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M44 11.2727C44 14.0109 39.8386 16.3957 33.69 17.6364C39.8386 18.877 44 21.2618 44 24C44 26.7382 39.8386 29.123 33.69 30.3636C39.8386 31.6043 44 33.9891 44 36.7273C44 40.7439 35.0457 44 24 44C12.9543 44 4 40.7439 4 36.7273C4 33.9891 8.16144 31.6043 14.31 30.3636C8.16144 29.123 4 26.7382 4 24C4 21.2618 8.16144 18.877 14.31 17.6364C8.16144 16.3957 4 14.0109 4 11.2727C4 7.25611 12.9543 4 24 4C35.0457 4 44 7.25611 44 11.2727Z" fill="currentColor"></path>
+                    </svg>
+                    <span class="ml-2 text-xl font-bold text-[var(--experian-dark-blue)]">Experian Kiosk</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600" id="welcomeMessage">Welcome, <span id="username">User</span></span>
+                    <button onclick="logout()" class="text-[var(--experian-blue)] hover:text-[var(--experian-dark-blue)] font-medium">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Page Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-[var(--experian-dark-blue)] mb-2">Challenge Hub</h1>
+            <p class="text-gray-600 text-lg">Securely ask your business knowledge questions or browse our resources.</p>
+        </div>
+
+        <!-- Main Cards -->
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <!-- Knowledge Challenge Card -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-blue-100 p-3 rounded-lg">
+                        <svg class="h-8 w-8 text-[var(--experian-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="ml-4 text-2xl font-semibold text-gray-800">Knowledge Challenge</h2>
+                </div>
+                <p class="text-gray-600 mb-6">Test your knowledge by answering questions about Experian's business and products.</p>
+                <button onclick="startQuiz()" class="w-full bg-[var(--experian-blue)] hover:bg-[var(--experian-dark-blue)] text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                    Start Quiz →
+                </button>
+            </div>
+
+            <!-- Business Knowledge Center Card -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-green-100 p-3 rounded-lg">
+                        <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <h2 class="ml-4 text-2xl font-semibold text-gray-800">Business Knowledge Center</h2>
+                </div>
+                <p class="text-gray-600 mb-6">Access a library of business-related documents and information to enhance your understanding.</p>
+                <button onclick="browseKnowledge()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                    Browse Documents →
+                </button>
+            </div>
+        </div>
+
+        <!-- Attempt History Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800">Attempt History</h2>
+                <div class="flex space-x-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        ● 12 Correct
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                        ● 3 Failed
+                    </span>
+                </div>
+            </div>
+            <p class="text-gray-600 mb-4">A summary of your past attempts.</p>
+            
+            <!-- Sample History Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Question</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 text-sm text-gray-900">Which is Experian's cloud-based, AI-powered solution...</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2023-10-27</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Correct</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <button class="text-[var(--experian-blue)] hover:underline">View details</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm text-gray-900">What year was Experian founded?</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2023-10-25</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Failed</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <button class="text-[var(--experian-blue)] hover:underline">View details</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm text-gray-900">What does 'Power of You' initiative refer to?</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2023-10-22</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Correct</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <button class="text-[var(--experian-blue)] hover:underline">View details</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!sessionStorage.getItem('isLoggedIn')) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Display username
+            const username = sessionStorage.getItem('username') || 'Admin';
+            document.getElementById('username').textContent = username;
+        });
+
+        // Navigation functions
+        function startQuiz() {
+            alert('Quiz functionality will be implemented next!');
+            // Will redirect to quiz.html later
+        }
+
+        function browseKnowledge() {
+            alert('Knowledge Center will be implemented in future versions!');
+            // Will redirect to knowledge.html later
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Quick development helper
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+                logout();
+            }
+        });
+    </script>
+</body>
+</html>

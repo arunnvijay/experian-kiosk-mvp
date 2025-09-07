@@ -1,0 +1,21 @@
+{ 
+  "app": { 
+    "name": "Experian Kiosk MVP", 
+    "version": "1.0.0", 
+    "host": "127.0.0.1", 
+    "port": 8000 
+  }, 
+  "auth": { 
+    "username": "admin", 
+    "password": "admin" 
+  }, 
+  "quiz": { 
+    "questions_per_session": 5, 
+    "topics": ["Fraud Prevention", "Credit Scoring", "Data Analytics", "Compliance"] 
+  }, 
+  "llm": { 
+    "model": "llama2", 
+    "temperature": 0.7, 
+    "max_tokens": 500 
+  } 
+} 

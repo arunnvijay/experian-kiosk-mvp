@@ -1,0 +1,4 @@
+Compliance and regulatory requirements are paramount in the financial sector. 
+Experian adheres to strict data protection regulations including GDPR, CCPA, 
+and industry-specific compliance standards. We implement robust security 
+measures and regular audits to ensure data privacy and regulatory compliance. 

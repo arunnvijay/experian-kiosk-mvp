@@ -1,0 +1,4 @@
+Credit Scoring models are fundamental to Experian's core business. 
+We provide comprehensive credit reports and scores to financial institutions 
+worldwide. Our algorithms analyze payment history, credit utilization, 
+length of credit history, and types of credit to generate accurate scores. 

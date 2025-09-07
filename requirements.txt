@@ -1,0 +1,16 @@
+# Minimal requirements for MVP testing
+# Use this if the main requirements.txt fails
+
+# Core web framework - essential for MVP
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Templates
+jinja2==3.1.2
+
+# Configuration
+python-dotenv==1.0.0
+
+# HTTP requests
+requests==2.31.0

@@ -1,0 +1,24 @@
+{ 
+  "topics": [ 
+    { 
+      "id": "fraud_prevention", 
+      "name": "Fraud Prevention", 
+      "document": "fraud_prevention.txt" 
+    }, 
+    { 
+      "id": "credit_scoring", 
+      "name": "Credit Scoring", 
+      "document": "credit_scoring.txt" 
+    }, 
+    { 
+      "id": "data_analytics", 
+      "name": "Data Analytics", 
+      "document": "data_analytics.txt" 
+    }, 
+    { 
+      "id": "compliance", 
+      "name": "Compliance", 
+      "document": "compliance.txt" 
+    } 
+  ] 
+} 

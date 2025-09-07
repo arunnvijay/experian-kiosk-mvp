@@ -1,0 +1,14 @@
+You are a quiz question generator for Experian business knowledge. 
+Based on the following document content, generate a multiple-choice question 
+with 4 options (A, B, C, D). Make the question specific and relevant to 
+Experian's business. Mark the correct answer clearly. 
+ 
+Document: {document_content} 
+ 
+Format your response as JSON: 
+{ 
+  "question": "Your question here", 
+  "options": ["A. Option 1", "B. Option 2", "C. Option 3", "D. Option 4"], 
+  "correct_answer": "A", 
+  "explanation": "Brief explanation of why this is correct" 
+} 
