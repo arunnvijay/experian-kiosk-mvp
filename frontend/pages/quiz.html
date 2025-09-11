@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+    <link as="style" href="https://fonts.googleapis.com/css2?display=swap&family=Inter%3Awght%40400%3B500%3B700%3B900&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+    <title>Experian Kiosk - Knowledge Challenge</title>
+    <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <style type="text/tailwindcss">
+        :root {
+            --experian-blue: #007dc3;
+            --experian-dark-blue: #002e5d;
+            --experian-grey: #f0f2f5;
+        }
+        body {
+            font-family: 'Inter', 'Noto Sans', sans-serif;
+        }
+        .quiz-option {
+            transition: all 0.2s ease-in-out;
+        }
+        .quiz-option:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 125, 195, 0.15);
+        }
+        .quiz-option.selected {
+            border-color: var(--experian-blue);
+            background-color: #e7f3ff;
+            box-shadow: 0 0 0 2px var(--experian-blue);
+        }
+        .quiz-option.correct {
+            border-color: #10b981;
+            background-color: #d1fae5;
+        }
+        .quiz-option.incorrect {
+            border-color: #ef4444;
+            background-color: #fee2e2;
+        }
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, var(--experian-blue) 0%, var(--experian-dark-blue) 100%);
+            transition: width 0.3s ease;
+        }
+        .page-section {
+            display: none;
+        }
+        .page-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-[var(--experian-grey)]">
+    <!-- Header -->
+    <header class="sticky top-0 z-10 bg-white shadow-sm">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center gap-4 py-4 text-gray-800">
+                <div class="flex items-center">
+                    <img src="/assets/images/ust-logo.png" alt="UST Logo" class="h-8 w-auto mr-2">
+                    <div class="text-gray-400 text-2xl font-light mx-2">|</div>
+                    <img src="/assets/images/experian-logo.png" alt="Experian Logo" class="h-8 w-auto ml-2">
+                </div>
+                <h1 class="text-xl font-bold tracking-tight text-[var(--experian-dark-blue)]">Experian Kiosk</h1>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button onclick="backToDashboard()" class="text-[var(--experian-blue)] hover:text-[var(--experian-dark-blue)] font-medium transition-colors">
+                    ← Back to Dashboard
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-[var(--experian-blue)] rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-sm" id="userInitials">U</span>
+                    </div>
+                    <span class="text-gray-600 text-sm" id="username">User</span>
+                </div>
+                <button onclick="logout()" class="text-[var(--experian-blue)] hover:text-[var(--experian-dark-blue)] font-medium transition-colors">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1">
+        <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+            
+            <!-- Loading Section -->
+            <div id="loadingSection" class="page-section active text-center py-20">
+                <div class="loading-spinner inline-block w-8 h-8 border-4 border-[var(--experian-blue)] border-t-transparent rounded-full"></div>
+                <p class="mt-4 text-gray-600">Loading quiz questions...</p>
+            </div>
+
+            <!-- Quiz Section -->
+            <div id="quizSection" class="page-section">
+                <div class="space-y-10">
+                    <div class="text-center">
+                        <h2 class="text-3xl font-bold tracking-tight text-[var(--experian-dark-blue)] sm:text-4xl">Knowledge Challenge</h2>
+                        <p class="mt-4 text-lg text-gray-600">Test your knowledge about Experian's business and products.</p>
+                        
+                        <div class="mt-6 max-w-md mx-auto">
+                            <div class="bg-gray-200 rounded-full h-2 overflow-hidden">
+                                <div class="progress-bar h-full rounded-full" id="progressBar" style="width: 20%"></div>
+                            </div>
+                            <div class="mt-2 text-sm text-gray-600">
+                                Progress: <span id="progressText">1 of 5</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 flex items-center justify-center space-x-6">
+                            <div class="text-center">
+                                <div class="text-lg font-bold text-[var(--experian-blue)]" id="currentQuestion">1</div>
+                                <div class="text-xs text-gray-500">Question</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-lg font-bold text-green-600" id="currentScore">0</div>
+                                <div class="text-xs text-gray-500">Score</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-lg font-bold text-gray-500" id="timeElapsed">0:00</div>
+                                <div class="text-xs text-gray-500">Time</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-lg border border-gray-200 bg-white p-8 shadow-lg" id="questionCard">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="text-xl font-semibold text-gray-900">Question:</label>
+                                <p class="mt-3 text-lg text-gray-700 leading-relaxed" id="questionText">Loading question...</p>
+                                <div class="mt-3 flex items-center space-x-4 text-sm text-gray-500">
+                                    <span>Topic: <span id="questionTopic" class="font-medium text-[var(--experian-blue)]">-</span></span>
+                                    <span>•</span>
+                                    <span>Difficulty: <span id="questionDifficulty" class="font-medium">-</span></span>
+                                </div>
+                            </div>
+
+                            <fieldset id="answerOptions">
+                                <legend class="sr-only">Choose an answer:</legend>
+                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2" id="optionsContainer">
+                                    <!-- Options populated by JavaScript -->
+                                </div>
+                            </fieldset>
+
+                            <div class="mt-8 flex justify-center">
+                                <button id="submitBtn" 
+                                        onclick="submitAnswer()" 
+                                        class="inline-flex items-center justify-center rounded-md border border-transparent bg-[var(--experian-blue)] px-8 py-3 text-base font-medium text-white shadow-sm hover:bg-[var(--experian-dark-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--experian-blue)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                        disabled>
+                                    Submit Answer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-lg" id="feedbackCard" style="display: none;">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Answer Feedback</h3>
+                        <div id="feedbackContent"></div>
+                        <div class="mt-6 flex justify-center">
+                            <button id="nextBtn" 
+                                    onclick="nextQuestion()" 
+                                    class="inline-flex items-center justify-center rounded-md border border-transparent bg-[var(--experian-blue)] px-8 py-3 text-base font-medium text-white shadow-sm hover:bg-[var(--experian-dark-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--experian-blue)] focus:ring-offset-2 transition-all">
+                                <span id="nextBtnText">Next Question →</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="page-section">
+                <div class="text-center">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-[var(--experian-blue)] to-[var(--experian-dark-blue)] flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white text-2xl">emoji_events</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-[var(--experian-dark-blue)] mb-2">Challenge Complete!</h3>
+                        <p class="text-gray-600">Great job on completing the knowledge challenge</p>
+                    </div>
+                    
+                    <div class="mb-8 p-6 bg-white rounded-lg shadow-lg">
+                        <div class="grid grid-cols-3 gap-6 text-center">
+                            <div>
+                                <div class="text-3xl font-bold text-[var(--experian-blue)]" id="finalScore">-/-</div>
+                                <div class="text-sm text-gray-600">Final Score</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl font-bold text-green-600" id="finalPercentage">-%</div>
+                                <div class="text-sm text-gray-600">Percentage</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl font-bold text-purple-600" id="finalTime">-</div>
+                                <div class="text-sm text-gray-600">Time Taken</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <button onclick="startNewQuiz()" 
+                                class="inline-flex items-center justify-center rounded-md border border-[var(--experian-blue)] bg-white px-6 py-3 text-base font-medium text-[var(--experian-blue)] shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--experian-blue)] focus:ring-offset-2 mr-4">
+                            Take Challenge Again
+                        </button>
+                        <button onclick="backToDashboard()" 
+                                class="inline-flex items-center justify-center rounded-md border border-transparent bg-[var(--experian-blue)] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[var(--experian-dark-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--experian-blue)] focus:ring-offset-2">
+                            Back to Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Section -->
+            <div id="errorSection" class="page-section text-center py-20">
+                <div class="text-red-500 mb-4">
+                    <span class="material-symbols-outlined text-4xl">error</span>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Unable to Load Quiz</h3>
+                <p class="text-gray-600 mb-6" id="errorMessage">There was an error loading the quiz questions.</p>
+                <button onclick="retryLoadQuiz()" 
+                        class="inline-flex items-center justify-center rounded-md border border-transparent bg-[var(--experian-blue)] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[var(--experian-dark-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--experian-blue)] focus:ring-offset-2">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simplified Quiz Controller
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let startTime = null;
+        let timerInterval = null;
+
+        const questions = [
+            {
+                question_id: 1,
+                question_text: "Which is Experian's cloud-based, AI-powered solution designed to combat online fraud without compromising customer experience, using adaptive machine learning and device fingerprinting to achieve 99.9% transaction classification accuracy?",
+                options: { A: "FraudShield", B: "SecureID", C: "TrustGuard", D: "FraudDefender" },
+                correct_answer: "D",
+                explanation: "FraudDefender is Experian's cloud-based, AI-powered solution designed to combat online fraud without compromising customer experience, using adaptive machine learning and device fingerprinting to achieve 99.9% transaction classification accuracy.",
+                topic: "Fraud Prevention",
+                difficulty: "Medium"
+            },
+            {
+                question_id: 2,
+                question_text: "What year was Experian founded?",
+                options: { A: "1980", B: "1996", C: "1990", D: "1985" },
+                correct_answer: "B",
+                explanation: "Experian was founded in 1996 as a spin-off from TRW Inc.",
+                topic: "Company History",
+                difficulty: "Easy"
+            },
+            {
+                question_id: 3,
+                question_text: "What does Experian's 'Power of You' initiative refer to?",
+                options: { A: "Employee empowerment program", B: "Data privacy and consumer control", C: "AI technology advancement", D: "Market expansion strategy" },
+                correct_answer: "B",
+                explanation: "The 'Power of You' initiative focuses on giving consumers control over their personal data and financial identity.",
+                topic: "Consumer Initiatives",
+                difficulty: "Medium"
+            },
+            {
+                question_id: 4,
+                question_text: "Which of these is NOT one of Experian's main business segments?",
+                options: { A: "Credit Services", B: "Decision Analytics", C: "Consumer Services", D: "Investment Banking" },
+                correct_answer: "D",
+                explanation: "Experian's main business segments are Credit Services, Decision Analytics, and Consumer Services. Investment Banking is not one of their core segments.",
+                topic: "Business Segments",
+                difficulty: "Easy"
+            },
+            {
+                question_id: 5,
+                question_text: "What is Experian's primary data focus?",
+                options: { A: "Social media analytics", B: "Credit and identity data", C: "E-commerce tracking", D: "Healthcare records" },
+                correct_answer: "B",
+                explanation: "Experian primarily focuses on credit and identity data to help businesses and consumers make informed decisions.",
+                topic: "Data Services",
+                difficulty: "Easy"
+            }
+        ];
+
+        function showSection(sectionId) {
+            console.log('Showing section:', sectionId);
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function initialize() {
+            if (!sessionStorage.getItem('isLoggedIn')) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const username = sessionStorage.getItem('username') || 'User';
+            document.getElementById('username').textContent = username;
+            
+            const initials = username.split(' ').map(part => part.charAt(0).toUpperCase()).slice(0, 2).join('');
+            document.getElementById('userInitials').textContent = initials;
+
+            startQuiz();
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedAnswer = null;
+            startTime = new Date();
+            
+            if (timerInterval) clearInterval(timerInterval);
+            startTimer();
+            
+            setTimeout(() => {
+                loadQuestion();
+                showSection('quizSection');
+            }, 1000);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((new Date() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('timeElapsed').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const question = questions[currentQuestionIndex];
+            
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${currentQuestionIndex + 1} of ${questions.length}`;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('currentScore').textContent = score;
+            
+            document.getElementById('questionText').textContent = question.question_text;
+            document.getElementById('questionTopic').textContent = question.topic;
+            document.getElementById('questionDifficulty').textContent = question.difficulty;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            Object.entries(question.options).forEach(([key, value]) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'quiz-option relative flex items-center rounded-lg border border-gray-300 bg-white p-4 cursor-pointer';
+                optionDiv.onclick = () => selectOption(key);
+                optionDiv.innerHTML = `
+                    <div class="flex h-6 items-center">
+                        <input class="h-5 w-5 rounded-full border-gray-300 text-[var(--experian-blue)]" 
+                               id="option${key}" name="answer" type="radio" value="${key}"/>
+                    </div>
+                    <div class="ml-4 text-lg">
+                        <label class="font-medium text-gray-800 cursor-pointer" for="option${key}">${key}. ${value}</label>
+                    </div>
+                `;
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            selectedAnswer = null;
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('feedbackCard').style.display = 'none';
+        }
+
+        function selectOption(option) {
+            document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelectorAll('input[name="answer"]').forEach(input => input.checked = false);
+
+            selectedAnswer = option;
+            const optionElement = document.querySelector(`#option${option}`).closest('.quiz-option');
+            optionElement.classList.add('selected');
+            document.querySelector(`#option${option}`).checked = true;
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function submitAnswer() {
+            if (!selectedAnswer) return;
+
+            const question = questions[currentQuestionIndex];
+            const isCorrect = selectedAnswer === question.correct_answer;
+            
+            if (isCorrect) score++;
+
+            document.getElementById('currentScore').textContent = score;
+
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                const input = opt.querySelector('input');
+                if (input.value === question.correct_answer) {
+                    opt.classList.add('correct');
+                } else if (input.value === selectedAnswer && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            const feedbackContent = document.getElementById('feedbackContent');
+            feedbackContent.innerHTML = `
+                <div class="rounded-md ${isCorrect ? 'bg-green-50' : 'bg-red-50'} p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <span class="material-symbols-outlined ${isCorrect ? 'text-green-400' : 'text-red-400'}">
+                                ${isCorrect ? 'check_circle' : 'cancel'}
+                            </span>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-base font-medium ${isCorrect ? 'text-green-800' : 'text-red-800'}">
+                                ${isCorrect ? 'Correct!' : `Incorrect. The correct answer is ${question.correct_answer}.`}
+                            </p>
+                            <p class="mt-2 text-sm ${isCorrect ? 'text-green-700' : 'text-red-700'}">
+                                ${question.explanation}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('feedbackCard').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            
+            if (currentQuestionIndex === questions.length - 1) {
+                document.getElementById('nextBtnText').textContent = 'View Results →';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex >= questions.length) {
+                showResults();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            console.log('Showing results...');
+            
+            if (timerInterval) clearInterval(timerInterval);
+            
+            const endTime = new Date();
+            const totalTime = Math.floor((endTime - startTime) / 1000);
+            const minutes = Math.floor(totalTime / 60);
+            const seconds = totalTime % 60;
+            const percentage = Math.round((score / questions.length) * 100);
+            
+            document.getElementById('finalScore').textContent = `${score}/${questions.length}`;
+            document.getElementById('finalPercentage').textContent = `${percentage}%`;
+            document.getElementById('finalTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            saveQuizResult();
+            showSection('resultsSection');
+            
+            console.log('Results shown:', { score, total: questions.length, percentage: percentage + '%' });
+        }
+
+        function saveQuizResult() {
+            const result = {
+                score: score,
+                totalQuestions: questions.length,
+                percentage: Math.round((score / questions.length) * 100),
+                date: new Date().toISOString()
+            };
+            
+            const key = `quizResult_${Date.now()}`;
+            localStorage.setItem(key, JSON.stringify(result));
+            
+            window.dispatchEvent(new StorageEvent('storage', {
+                key: key,
+                newValue: JSON.stringify(result)
+            }));
+        }
+
+        function startNewQuiz() {
+            console.log('Starting new quiz...');
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedAnswer = null;
+            startTime = null;
+            
+            if (timerInterval) clearInterval(timerInterval);
+            
+            showSection('loadingSection');
+            startQuiz();
+        }
+
+        function backToDashboard() {
+            if (timerInterval) clearInterval(timerInterval);
+            window.location.href = 'dashboard.html';
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                if (timerInterval) clearInterval(timerInterval);
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+
+        function retryLoadQuiz() {
+            showSection('loadingSection');
+            startQuiz();
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initialize);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '1' && e.key <= '4') {
+                const options = ['A', 'B', 'C', 'D'];
+                selectOption(options[parseInt(e.key) - 1]);
+            }
+            
+            if (e.key === 'Enter' && !document.getElementById('submitBtn').disabled) {
+                submitAnswer();
+            }
+            
+            if ((e.key === ' ' || e.key === 'Enter') && document.getElementById('feedbackCard').style.display === 'block') {
+                e.preventDefault();
+                nextQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
